@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Musium</string>
+    <string name="title_activity_screen2">Screen2</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.example.musium
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -41,6 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.core.view.ViewCompat
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
@@ -67,8 +69,10 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun SplashScreen() {
-    Surface(modifier = Modifier.fillMaxSize(),
-        color = colorResource(id = R.color.splash_color)) {
+    val context = LocalContext.current
+    Surface(
+        modifier = Modifier.fillMaxSize()
+    ) {
         Image(
             painter = painterResource(R.drawable.splashscreen),
             contentDescription = null,
@@ -97,14 +101,17 @@ fun SplashScreen() {
                 text = "Emmerse yourself into the\nworld of music today",
                 fontSize = 16.sp,
                 style = MaterialTheme.typography.bodySmall,
-                color = colorResource(R.color.grey),
+                color = colorResource(R.color.gray),
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .padding(64.dp, 8.dp, 64.dp, 32.dp)
 
             )
             TextButton(
-                onClick = {},
+                onClick = {
+                    val intent = Intent(context, Screen2::class.java)
+                    startActivity(context,intent,null)
+                },
                 modifier =
                 Modifier
                     .padding(16.dp)
