@@ -10,4 +10,5 @@
     <color name="splash_color">#842ED8</color>
     <color name="gray">#A5A5A5</color>
     <color name="dark_gray">#433E48</color>
+    <color name="tab_underlined_color">#C22BB7</color>
 </resources>

@@ -32,9 +32,12 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -43,6 +46,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -72,6 +76,8 @@ import com.google.android.material.search.SearchBar
 class Screen2 : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
         setContent {
             MusiumTheme {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
@@ -136,6 +142,7 @@ fun welcomeText(){
             )
 
         searchView(state = textState)
+        playList()
     }
 }
 
@@ -144,34 +151,98 @@ fun welcomeText(){
 fun searchView(
     state: MutableState<TextFieldValue>,
 ){
-    TextField(
-        value = state.value ,
-        onValueChange = {
-            value -> state.value = value
-        },
+    Box(
         modifier = Modifier
             .padding(0.dp, 8.dp)
             .clip(RoundedCornerShape(12.dp))
-            .background(color = colorResource(id = R.color.dark_gray)),
-        placeholder = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            )
-            {
-                Icon(imageVector = Icons.Default.Search, contentDescription = null , Modifier.size(30.dp))
-                Text(
-                    text = "Search song, playlist, artist...",
-                    color = Color.Gray,
-                    fontSize = 14.sp
+            .background(color = colorResource(id = R.color.dark_gray))
+    ) {
+        TextField(
+            value = state.value,
+            onValueChange = { value ->
+                state.value = value
+            },
+            placeholder = {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
                 )
-            }
-        },
-        maxLines = 1,
-        singleLine = true,
-        textStyle = TextStyle(
-            color = colorResource(id = R.color.dark_gray),
-            fontSize = 18.sp
+                {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = null,
+                        Modifier.size(30.dp)
+                    )
+                    Text(
+                        text = "Search song, playlist, artist...",
+                        color = Color.Gray,
+                        fontSize = 14.sp
+                    )
+                }
+            },
+            maxLines = 1,
+            singleLine = true,
+            textStyle = TextStyle(
+                color = Color.White,
+                fontSize = 18.sp
+            )
         )
+    }
+}
+
+@SuppressLint("SuspiciousIndentation")
+@Composable
+fun playList(){
+    var selectedTabIndex by remember{
+        mutableIntStateOf(0)
+    }
+    val playlistItems = listOf<PlaylistItem>(
+        PlaylistItem(
+            title = "Recent"),
+        PlaylistItem(
+            title = "Top 50"),
+        PlaylistItem(
+            title = "Chill"),
+        PlaylistItem(
+            title = "R&B"),
+        PlaylistItem(
+            title = "Festival")
     )
+        Column(
+            modifier = Modifier
+                .height(80.dp)
+                .fillMaxWidth()
+        ){
+            ScrollableTabRow(
+                selectedTabIndex = selectedTabIndex,
+                modifier = Modifier
+                    .background(Color.Transparent),
+                edgePadding = 0.dp,
+                contentColor = LocalContentColor.current.copy(alpha = 1f)
+            ) {
+                playlistItems.forEachIndexed{
+                    index, playlistItem ->
+                        Tab(
+                          selected = index == selectedTabIndex,
+                            onClick = {
+                                selectedTabIndex = index
+                            },
+                            text = {
+                                Text(
+                                    text = playlistItem.title,
+                                    modifier = Modifier
+                                        .padding(16.dp,8.dp)
+                                )
+                            },
+                            modifier = Modifier
+                                .background(
+                                    color = if(index == selectedTabIndex)
+                                        colorResource(id = R.color.tab_underlined_color)
+                                    else Color.Transparent,
+                                    shape = RoundedCornerShape(topEnd = 8.dp, topStart = 8.dp)
+                                )
+                        )
+                }
+            }
+        }
 }
